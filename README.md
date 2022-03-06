@@ -1,3 +1,7 @@
+# Duotone 
+[https://css-tricks.com/using-svg-to-create-a-duotone-image-effect/](https://css-tricks.com/using-svg-to-create-a-duotone-image-effect/)
+
+----
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

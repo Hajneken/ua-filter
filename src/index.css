@@ -5,9 +5,70 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #181d24;
+  max-width: 920px;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+--root{
+  --blue: #0057b7;
+  --yellow: #ffd700;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.filters{
+  display: none;
+}
+
+#Img{
+  max-width: 90%;
+  margin: 10px auto;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0px 2px 9px 4px rgb(0 0 0 / 20%);
+}
+
+main{
+  /* min-height: calc(100vh - 63px); */
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.text{
+  color: white;
+  text-align: left;
+  max-width: 600px;
+  font-size: 1.2rem;
+  margin: 0 auto;
+}
+
+.important.MuiAccordion-root{
+  background: #ffd700;
+}
+
+html::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: -webkit-linear-gradient(top, #0057b7 0 25%, #ffd700);    
+  opacity: 0.85; 
+}
+
+.m-10{
+  margin: 0 10px;
+}
+
+.mt-10{
+  margin-top: 10px;
 }
