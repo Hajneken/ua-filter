@@ -61,16 +61,12 @@ function App() {
   // app initialization
   useEffect(() => {
     if (!yellowRGB && !blueRGB) {
-      initApp()
+      setBlueRGB(hexToRgb(blue))
+      setYellowRGB(hexToRgb(yellow))
+      setBlueRGBDarker(hexToRgb(blueDarker))
+      setYellowRGBDarker(hexToRgb(yellowDarker))
     }
-  }, [])
-
-  const initApp = () => {
-    setBlueRGB(hexToRgb(blue))
-    setYellowRGB(hexToRgb(yellow))
-    setBlueRGBDarker(hexToRgb(blueDarker))
-    setYellowRGBDarker(hexToRgb(yellowDarker))
-  }
+  }, [yellowRGB, blueRGB])
 
   // converter
   const hexToRgb = (hex) => {
@@ -112,133 +108,135 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <header className="App-header">
-          <H1>Support Ukraine</H1>
-          <Accordion className='m-10'>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography><strong>What is this?</strong></Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography align="left">
-                This app lets you upload an arbitrary image and apply <a href="https://en.wikipedia.org/wiki/Duotone" target="_blank" rel="noreferrer">duotone</a> filer resembling the Ukrainian flag.
-                <br />
-                Your data is <strong>not</strong> uploaded or stored anywhere. All the processing takes place in your browser.
+        <div className="container">
+          <header className="App-header">
+            <H1>Support Ukraine</H1>
+          </header>
+          {loading && <div style={{ width: "100%", marginTop: "20px" }}>
+            <CircularProgress />
+          </div>}
+          <main>
+            <Accordion className='m-10'>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography><strong>What is this?</strong></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography align="left">
+                  This app lets you upload an arbitrary image and apply <a href="https://en.wikipedia.org/wiki/Duotone" target="_blank" rel="noreferrer">duotone</a> filer resembling the Ukrainian flag.
+                  <br />
+                  Your data is <strong>not</strong> uploaded or stored anywhere. All the processing takes place in your browser.
+                  <br /> More importantly, the app provides compiled list of links to official resources for refugees fleeing Ukraine (see Important Links).
+                  <img src={howTo} alt="Example of filter application" style={{ width: "100%" }} />
+                  Fancy a cool refresh of your profile picture? 😉
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion className='m-10'>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1b-content"
+                id="panel1b-header"
+              >
+                <Typography><strong>Why should I care?</strong></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography align="left">
+                  <strong>Short answer:</strong> Putin has started a <strong>war</strong> in Europe.<br />
+                  <strong>Long answer:</strong> Following the recognition of Ukrainian seperataist regions, the self-proclaimed <abbr title="Donetsk People's Republic">DPR</abbr> and <abbr title="Luhansk People's Republic">LPR</abbr> as on the February 21, 2022, dictator of the authoritarian Russia, Vladimir Vladimirovich Putin has launched under a faked pretext a full-scale invasion of sovereign country of Ukraine. Russian Federation is a totalitarian regime known for suppressing the freedom of speech by means of state propaganda, censorship, systematic jailing and murdering of any opposition and support of state-sponsored terrorism. After decades of peace in Europe, Putin has started war in Europe. Millions of people were forced to leave their homes. This unprovoked attack on democratic values and ongoing efforts to destabilize democratic countries threatens the global peace and stability.
+                  <br />
+                  <a href="https://en.wikipedia.org/wiki/Russo-Ukrainian_War" target="_blank" rel="noreferrer">Learn more about the conflict</a>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion className="m-10 important">
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1c-content"
+                id="panel1c-header"
+              >
+                <Typography><strong>Important Links (Важливі посилання)</strong></Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ul style={{ textAlign: "left", listStyleType: "none" }}>
+                  <li><Button style={{ fontWeight: 600 }} href="https://www.gov.pl/web/mswia-en/information-for-refugees-from-ukraine" target="_blank" rel="noreferrer">🇵🇱 Get Help in Poland | Отримати допомогу в Польщі</Button></li>
+                  <li><Button style={{ fontWeight: 600 }} href="https://ua.gov.sk/en.html" target="_blank" rel="noreferrer">🇸🇰 Get Help in Slovakia | Отримати допомогу в Словаччині </Button></li>
+                  <li><Button style={{ fontWeight: 600 }} href="https://helsinki.hu/en/information-for-people-fleeing-from-ukraine/" target="_blank" rel="noreferrer">🇭🇺 Get Help in Hungary | Отримати допомогу в Угорщині</Button></li>
+                  <li><Button style={{ fontWeight: 600 }} href="https://romania.iom.int/news/useful-information-people-entering-romania-ukraine" target="_blank" rel="noreferrer">🇷🇴 Get Help in Romania | Отримайте допомогу в Румунії</Button></li>
+                  <li><Button style={{ fontWeight: 600 }} href="https://nasiukrajinci.cz/" target="_blank" rel="noreferrer">🇨🇿 Help / Get Help in the Czech Republic | Допомога / Отримати допомогу в Чеській Республіці</Button></li>
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+            <div className="mt-10">
+              <label htmlFor="contained-button-file">
+                <input accept="image/*" id="contained-button-file" onChange={handleImgUpload} multiple type="file" style={{ display: 'none' }} />
+                <Button variant="contained" component="span" endIcon={<ImageIcon />} style={
+                  { marginRight: "1rem" }
+                }>
+                  Upload
+                </Button>
+              </label>
+              <Button ref={downloadLink} variant="contained" href={resImg} disabled={!resImg} color="secondary" endIcon={<SaveIcon />} download >Download</Button>
+            </div>
+            <img ref={img} src={inputImg} key={inputImg} onLoad={drawImg} alt="Original" style={{ display: "none" }} />
+            {resImg !== null && <img src={resImg} alt="Processed with Ukraine Filter" style={{ display: "none" }} />}
+            <canvas id="Img" onClick={triggerDownload} ref={canvas} >Please Use Modern Web Browser</canvas>
+            {
+              (blueRGB && yellowRGB && blueRGBDarker && yellowRGBDarker) && (
+                <div className="filters">
+                  <svg xmlns="http://www.w3.org/2000/svg">
+                    <filter id="blue">
+                      <feColorMatrix type="matrix" result="grayscale"
+                        values="1 0 0 0 0
+                              1 0 0 0 0
+                              1 0 0 0 0
+                              0 0 0 1 0" >
+                      </feColorMatrix>
+                      <feComponentTransfer colorInterpolationFilters="sRGB" result="blue">
+                        <feFuncR type="table" tableValues={`${(blueRGBDarker.r) / 255} ${blueRGB.r / 255}`}></feFuncR>
+                        <feFuncG type="table" tableValues={`${(blueRGBDarker.g) / 255} ${blueRGB.g / 255}`}></feFuncG>
+                        <feFuncB type="table" tableValues={`${(blueRGBDarker.b) / 255} ${blueRGB.b / 255}`}></feFuncB>
+                        <feFuncA type="table" tableValues="0 1"></feFuncA>
+                      </feComponentTransfer>
+                    </filter>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg">
+                    <filter id="yellow">
+                      <feColorMatrix type="matrix" result="grayscale"
+                        values="1 0 0 0 0
+                              1 0 0 0 0
+                              1 0 0 0 0
+                              0 0 0 1 0" >
+                      </feColorMatrix>
+                      <feComponentTransfer colorInterpolationFilters="sRGB" result="yellow">
+                        <feFuncR type="table" tableValues={`${yellowRGBDarker.r / 255} ${yellowRGB.r / 255}`}></feFuncR>
+                        <feFuncG type="table" tableValues={`${yellowRGBDarker.g / 255} ${yellowRGB.g / 255}`}></feFuncG>
+                        <feFuncB type="table" tableValues={`${yellowRGBDarker.b / 255} ${yellowRGB.b / 255}`}></feFuncB>
+                        <feFuncA type="table" tableValues="0 1"></feFuncA>
+                      </feComponentTransfer>
+                    </filter>
+                  </svg>
+                </div>
+              )
+            }
+          </main>
+        </div>
 
-                <br /> More importantly, the app provides compiled list of links to official resources for refugees fleeing Ukraine (see Important Links).
-
-                <img src={howTo} alt="Example of filter application" style={{ width: "100%" }} />
-
-                Fancy a cool refresh of your profile picture? 😉
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion className='m-10'>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1b-content"
-              id="panel1b-header"
-            >
-              <Typography><strong>Why should I care?</strong></Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography align="left">
-                <strong>Short answer:</strong> Putin has started a <strong>war</strong> in Europe.<br />
-                <strong>Long answer:</strong> Following the recognition of Ukrainian seperataist regions, the self-proclaimed <abbr title="Donetsk People's Republic">DPR</abbr> and <abbr title="Luhansk People's Republic">LPR</abbr> as on the February 21, 2022, dictator of the authoritarian Russia, Vladimir Vladimirovich Putin has launched under a faked pretext a full-scale invasion of sovereign country of Ukraine. Russian Federation is a totalitarian regime known for suppressing the freedom of speech by means of state propaganda, censorship, systematic jailing and murdering of any opposition and support of state-sponsored terrorism. After decades of peace in Europe, Putin has started war in Europe. Millions of people were forced to leave their homes. This unprovoked attack on democratic values and ongoing efforts to destabilize democratic countries threatens the global peace and stability.
-                <br />
-                <a href="https://en.wikipedia.org/wiki/Russo-Ukrainian_War" target="_blank" rel="noreferrer">Learn more about the conflict</a>
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion className="m-10 important">
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1c-content"
-              id="panel1c-header"
-            >
-              <Typography><strong>Important Links (Важливі посилання)</strong></Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ul style={{ textAlign: "left", listStyleType: "none" }}>
-                <li><Button style={{ fontWeight: 600 }} href="https://www.gov.pl/web/mswia-en/information-for-refugees-from-ukraine" target="_blank" rel="noreferrer">🇵🇱 Get Help in Poland | Отримати допомогу в Польщі</Button></li>
-                <li><Button style={{ fontWeight: 600 }} href="https://ua.gov.sk/en.html" target="_blank" rel="noreferrer">🇸🇰 Get Help in Slovakia | Отримати допомогу в Словаччині </Button></li>
-                <li><Button style={{ fontWeight: 600 }} href="https://helsinki.hu/en/information-for-people-fleeing-from-ukraine/" target="_blank" rel="noreferrer">🇭🇺 Get Help in Hungary | Отримати допомогу в Угорщині</Button></li>
-                <li><Button style={{ fontWeight: 600 }} href="https://romania.iom.int/news/useful-information-people-entering-romania-ukraine" target="_blank" rel="noreferrer">🇷🇴 Get Help in Romania | Отримайте допомогу в Румунії</Button></li>
-                <li><Button style={{ fontWeight: 600 }} href="https://nasiukrajinci.cz/" target="_blank" rel="noreferrer">🇨🇿 Help / Get Help in the Czech Republic | Допомога / Отримати допомогу в Чеській Республіці</Button></li>
-              </ul>
-            </AccordionDetails>
-          </Accordion>
-          <div className="mt-10">
-            <label htmlFor="contained-button-file">
-              <input accept="image/*" id="contained-button-file" onChange={handleImgUpload} multiple type="file" style={{ display: 'none' }} />
-              <Button variant="contained" component="span" endIcon={<ImageIcon />} style={
-                { marginRight: "1rem" }
-              }>
-                Upload
-              </Button>
-            </label>
-            <Button ref={downloadLink} variant="contained" href={resImg} disabled={!resImg} color="secondary" endIcon={<SaveIcon />} download >Download</Button>
-          </div>
-        </header>
-        {loading && <div style={{ width: "100%", marginTop: "20px" }}>
-          <CircularProgress />
-        </div>}
-        <main>
-          <img ref={img} src={inputImg} key={inputImg} onLoad={drawImg} alt="Original" style={{ display: "none" }} />
-          {resImg !== null && <img src={resImg} alt="Processed with Ukraine Filter" style={{ display: "none" }} />}
-          <canvas id="Img" onClick={triggerDownload} ref={canvas} >Please Use Modern Web Browser</canvas>
-          {
-            (blueRGB && yellowRGB && blueRGBDarker && yellowRGBDarker) && (
-              <div className="filters">
-                <svg xmlns="http://www.w3.org/2000/svg">
-                  <filter id="blue">
-                    <feColorMatrix type="matrix" result="grayscale"
-                      values="1 0 0 0 0
-                            1 0 0 0 0
-                            1 0 0 0 0
-                            0 0 0 1 0" >
-                    </feColorMatrix>
-                    <feComponentTransfer colorInterpolationFilters="sRGB" result="blue">
-                      <feFuncR type="table" tableValues={`${(blueRGBDarker.r) / 255} ${blueRGB.r / 255}`}></feFuncR>
-                      <feFuncG type="table" tableValues={`${(blueRGBDarker.g) / 255} ${blueRGB.g / 255}`}></feFuncG>
-                      <feFuncB type="table" tableValues={`${(blueRGBDarker.b) / 255} ${blueRGB.b / 255}`}></feFuncB>
-                      <feFuncA type="table" tableValues="0 1"></feFuncA>
-                    </feComponentTransfer>
-                  </filter>
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg">
-                  <filter id="yellow">
-                    <feColorMatrix type="matrix" result="grayscale"
-                      values="1 0 0 0 0
-                            1 0 0 0 0
-                            1 0 0 0 0
-                            0 0 0 1 0" >
-                    </feColorMatrix>
-                    <feComponentTransfer colorInterpolationFilters="sRGB" result="yellow">
-                      <feFuncR type="table" tableValues={`${yellowRGBDarker.r / 255} ${yellowRGB.r / 255}`}></feFuncR>
-                      <feFuncG type="table" tableValues={`${yellowRGBDarker.g / 255} ${yellowRGB.g / 255}`}></feFuncG>
-                      <feFuncB type="table" tableValues={`${yellowRGBDarker.b / 255} ${yellowRGB.b / 255}`}></feFuncB>
-                      <feFuncA type="table" tableValues="0 1"></feFuncA>
-                    </feComponentTransfer>
-                  </filter>
-                </svg>
-              </div>
-            )
-          }
-          <p>Слава Україні!</p>
-        </main>
-        
         <footer>
-          <p>
-            Found a bug? Make a PR on
-            <a href="www.github.com">
-              <GitHubIcon />
+          <Typography variant="h5" gutterBottom component="div">
+            Слава Україні!
+          </Typography>
+
+          <Typography variant="h3" gutterBottom component="div">
+            <a style={{ color: "white" }} href="https://github.com/Hajneken/ua-filter" target="_blank" rel="noreferrer">
+              <GitHubIcon fontSize="large" />
             </a>
-          </p>
-          <p>Made with ❤ in 🇨🇿 by <a href="https://www.zemanec.me">Hynek Zemanec</a></p>
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom component="div">Made with ❤ in 🇨🇿 by <a style={{ color: "white" }} href="https://www.zemanec.me" rel="noreferrer">Hynek Zemanec</a></Typography>
         </footer>
       </div>
     </ThemeProvider>
