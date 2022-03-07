@@ -1,23 +1,37 @@
-import './App.css';
+import React, { useState, useEffect, useRef } from 'react';
 
+// fonts
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+// images
 import howTo from './howTo.png'
 
-import React, { useState, useEffect, useRef } from 'react';
-import Button from '@mui/material/Button';
+// material icons
 import SaveIcon from '@mui/icons-material/Save';
 import ImageIcon from '@mui/icons-material/Image';
+import GitHubIcon from '@mui/icons-material/GitHub';
+
+// Material Components
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import CookieIcon from '@mui/icons-material/Cookie';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import GitHubIcon from '@mui/icons-material/GitHub';
 
+// styles and typography
+import './App.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import { H1 } from './components/H1/styled';
-
+import Typography from '@mui/material/Typography';
 
 function App() {
 
@@ -52,6 +66,7 @@ function App() {
   const [inputImg, setInputImg] = useState(null);
   const [resImg, setResImg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(true);
 
   // refs
   const canvas = useRef(null);
@@ -86,6 +101,7 @@ function App() {
     canvas.current.height = img.current.height
     canvas.current.width = img.current.width
 
+    // URL ctx.filter unsupported in Safari
     ctx.filter = "url(#blue)"
     ctx.drawImage(img.current, 0, 0, img.current.width, img.current.height / 2, 0, 0, img.current.width, img.current.height / 2)
     ctx.filter = "url(#yellow)"
@@ -110,8 +126,18 @@ function App() {
       <div className="App">
         <div className="container">
           <header className="App-header">
-            <H1>Support Ukraine</H1>
+            <H1>Support Ukraine Filter</H1>
           </header>
+          <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            open={snackOpen}
+            onClose={() => setSnackOpen(false)}
+          >
+            <Alert icon={<CookieIcon />} onClose={() => setSnackOpen(false)} severity="info" sx={{ width: '100%' }}>
+              I use cookies to see how many people visit. That's it.
+            </Alert>
+          </Snackbar>
+
           {loading && <div style={{ width: "100%", marginTop: "20px" }}>
             <CircularProgress />
           </div>}
@@ -132,6 +158,9 @@ function App() {
                   <br /> More importantly, the app provides compiled list of links to official resources for refugees fleeing Ukraine (see Important Links).
                   <img src={howTo} alt="Example of filter application" style={{ width: "100%" }} />
                   Fancy a cool refresh of your profile picture? 😉
+                  <br />
+
+                  <strong>Note: Safari Browsers for MAC and iOS are unsupported due to technical limitations.</strong>
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -146,7 +175,7 @@ function App() {
               <AccordionDetails>
                 <Typography align="left">
                   <strong>Short answer:</strong> Putin has started a <strong>war</strong> in Europe.<br />
-                  <strong>Long answer:</strong> Following the recognition of Ukrainian seperataist regions, the self-proclaimed <abbr title="Donetsk People's Republic">DPR</abbr> and <abbr title="Luhansk People's Republic">LPR</abbr> as on the February 21, 2022, dictator of the authoritarian Russia, Vladimir Vladimirovich Putin has launched under a faked pretext a full-scale invasion of sovereign country of Ukraine. Russian Federation is a totalitarian regime known for suppressing the freedom of speech by means of state propaganda, censorship, systematic jailing and murdering of any opposition and support of state-sponsored terrorism. After decades of peace in Europe, Putin has started war in Europe. Millions of people were forced to leave their homes. This unprovoked attack on democratic values and ongoing efforts to destabilize democratic countries threatens the global peace and stability.
+                  <strong>Long answer:</strong>  Following the recognition of Ukrainian seperataist regions, the self-proclaimed <abbr title="Donetsk People's Republic">DPR</abbr> and <abbr title="Luhansk People's Republic">LPR</abbr> as on the February 21, 2022,the dictator of the authoritarian Russia, Vladimir Vladimirovich Putin has launched under a faked pretext a full-scale invasion of sovereign country of Ukraine. Russian Federation is a totalitarian regime known for suppressing the freedom of speech by means of state propaganda, censorship, systematic jailing and murdering of any opposition and support of state-sponsored terrorism. After decades of peace in Europe, Putin has started war in Europe. Millions of people were forced to leave their homes. This unprovoked attack on democratic values and ongoing efforts to destabilize democratic countries threatens the global peace and stability.
                   <br />
                   <a href="https://en.wikipedia.org/wiki/Russo-Ukrainian_War" target="_blank" rel="noreferrer">Learn more about the conflict</a>
                 </Typography>
@@ -170,7 +199,7 @@ function App() {
                 </ul>
               </AccordionDetails>
             </Accordion>
-            <div className="mt-10">
+            <div className="mt-10 mb-1">
               <label htmlFor="contained-button-file">
                 <input accept="image/*" id="contained-button-file" onChange={handleImgUpload} multiple type="file" style={{ display: 'none' }} />
                 <Button variant="contained" component="span" endIcon={<ImageIcon />} style={
@@ -183,7 +212,14 @@ function App() {
             </div>
             <img ref={img} src={inputImg} key={inputImg} onLoad={drawImg} alt="Original" style={{ display: "none" }} />
             {resImg !== null && <img src={resImg} alt="Processed with Ukraine Filter" style={{ display: "none" }} />}
-            <canvas id="Img" onClick={triggerDownload} ref={canvas} >Please Use Modern Web Browser</canvas>
+            <div>
+              <Stack className="skeleton" style={inputImg ? { display: "none" } : { display: "block" }} spacing={1}>
+                <Skeleton variant="text" width={210} animation={false} />
+                <Skeleton variant="circular" width={40} height={40} animation={false} />
+                <Skeleton variant="rectangular" width={210} height={118} animation={false} />
+              </Stack>
+              <canvas id="Img" onClick={triggerDownload} ref={canvas} style={!inputImg ? { display: "none" } : { display: "block" }} >Please Use Modern Web Browser</canvas>
+            </div>
             {
               (blueRGB && yellowRGB && blueRGBDarker && yellowRGBDarker) && (
                 <div className="filters">
