@@ -2,9 +2,11 @@
 
 [Try Demo](https://www.uafilter.zemanec.me/)
 
-Image processing by leveraging web technologies.
+Image processing by leveraging canvas and other web technologies.
 
-[https://css-tricks.com/using-svg-to-create-a-duotone-image-effect/](https://css-tricks.com/using-svg-to-create-a-duotone-image-effect/)
+![Demo](src/howTo.png)
+
+[Learn More About Image processing using browser API](https://css-tricks.com/using-svg-to-create-a-duotone-image-effect/)
 
 ----
 
